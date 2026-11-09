@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="#14532d">
+    <title>Stok Barang — SMAN 1 Perbaungan</title>
+    <style>
+        :root {
+            --g: #14532d;
+            --g2: #166534;
+            --bg: #f4f7f4;
+            --line: #dce6de;
+            --muted: #647067;
+            --red: #b91c1c
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: #17221b;
+            font: 15px/1.45 system-ui, -apple-system, Segoe UI, Arial, sans-serif
+        }
+
+        .top {
+            background: linear-gradient(135deg, #14532d, #15803d);
+            color: white;
+            padding: 20px 15px
+        }
+
+        .wrap {
+            max-width: 1100px;
+            margin: auto
+        }
+
+        .brand {
+            display: flex;
+            gap: 12px;
+            align-items: center
+        }
+
+        .logo {
+            font-size: 26px;
+            background: #ffffff20;
+            padding: 10px;
+            border-radius: 12px
+        }
+
+        .top h1 {
+            font-size: clamp(20px, 4vw, 28px);
+            margin: 0
+        }
+
+        .top p {
+            margin: 4px 0 0;
+            color: #dcfce7
+        }
+
+        .main {
+            max-width: 1100px;
+            margin: 16px auto 35px;
+            padding: 0 14px
+        }
+
+        .panel,
+        .stat {
+            background: white;
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 14px;
+            box-shadow: 0 3px 12px #15391e08
+        }
+
+        .panel h2 {
+            font-size: 18px;
+            margin: 0 0 13px
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 9px
+        }
+
+        .stat span {
+            display: block;
+            color: var(--muted);
+            font-size: 12px
+        }
+
+        .stat strong {
+            font-size: 25px;
+            color: var(--g)
+        }
+
+        .tabs {
+            display: flex;
+            gap: 7px;
+            overflow: auto;
+            padding: 4px 0 13px
+        }
+
+        .tab,
+        .btn {
+            border: 0;
+            border-radius: 9px;
+            padding: 10px 13px;
+            font: inherit;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap
+        }
+
+        .tab {
+            background: white;
+            border: 1px solid var(--line);
+            color: #35453a
+        }
+
+        .tab.active,
+        .primary {
+            background: var(--g);
+            color: white
+        }
+
+        .secondary {
+            background: #e8f5eb;
+            color: var(--g)
+        }
+
+        .danger {
+            background: #fee2e2;
+            color: #991b1b
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px
+        }
+
+        .field label {
+            display: block;
+            font-size: 13px;
+            font-weight: 650;
+            margin-bottom: 5px
+        }
+
+        .field input,
+        .field select,
+        .field textarea,
+        .search {
+            width: 100%;
+            padding: 11px 12px;
+            border: 1px solid #cbd8ce;
+            border-radius: 9px;
+            font: inherit;
+            background: white;
+            min-height: 43px
+        }
+
+        .field textarea {
+            min-height: 70px
+        }
+
+        .full {
+            grid-column: 1/-1
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 13px
+        }
+
+        .tablewrap {
+            overflow: auto
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 680px
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 10px;
+            border-bottom: 1px solid #e7eee8;
+            font-size: 13px
+        }
+
+        th {
+            background: #f5faf6
+        }
+
+        .pill {
+            border-radius: 99px;
+            padding: 3px 8px;
+            background: #dcfce7;
+            color: #166534;
+            font-weight: 700
+        }
+
+        .low {
+            background: #fee2e2;
+            color: #991b1b
+        }
+
+        .muted {
+            color: var(--muted);
+            font-size: 13px
+        }
+
+        .hidden {
+            display: none !important
+        }
+
+        .note {
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            border-radius: 10px;
+            padding: 11px;
+            margin-bottom: 13px;
+            color: #854d0e;
+            font-size: 13px
+        }
+
+        .rowtitle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 12px
+        }
+
+        .empty {
+            text-align: center;
+            padding: 22px;
+            color: var(--muted)
+        }
+
+        .delete {
+            background: #fff1f2;
+            color: #be123c;
+            border: 1px solid #fecdd3;
+            border-radius: 7px;
+            padding: 6px;
+            cursor: pointer
+        }
+        .edit {
+            background: #eff6ff;
+            color: #1d4ed8;
+            border: 1px solid #bfdbfe;
+            border-radius: 7px;
+            padding: 6px 9px;
+            cursor: pointer;
+            margin-right: 6px
+        }
+
+        .signature {
+            border: 1px dashed #9ca3af;
+            border-radius: 10px;
+            background: #fff;
+            touch-action: none;
+            width: 100%;
+            height: 160px;
+            display: block
+        }
+
+        .sigtools {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin: 6px 0
+        }
+
+        .status {
+            font-size: 13px;
+            padding: 8px 10px;
+            border-radius: 8px;
+            background: #eef6ef;
+            margin: 10px 0
+        }
+
+        .foot {
+            text-align: center;
+            color: var(--muted);
+            font-size: 12px;
+            padding: 10px
+        }
+
+        @media(min-width:760px) {
+            .grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr))
+            }
+
+            .panel {
+                padding: 20px
+            }
+
+            .stats {
+                gap: 14px
+            }
+
+            .stat {
+                padding: 18px
+            }
+        }
+
+        @media(max-width:480px) {
+            .grid {
+                grid-template-columns: 1fr
+            }
+
+            .full {
+                grid-column: auto
+            }
+
+            .stats strong {
+                font-size: 21px
+            }
+
+            .panel {
+                padding: 13px
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="top">
+        <div class="wrap brand">
+            <div class="logo">📦</div>
+            <div>
+                <h1>Aplikasi Stok Barang Sekolah</h1>
+                <p>SMAN 1 Perbaungan · Sistem persediaan dan pengambilan barang</p>
+            </div>
+        </div>
+    </header>
+    <main class="main">
+        <section id="loginPanel" class="panel">
+            <h2>Login Petugas</h2>
+            <p class="muted">Masuk menggunakan akun petugas yang terdaftar. Untuk akses bersama dari beberapa HP,
+                hubungkan aplikasi ke Firebase terlebih dahulu.</p>
+            <div id="setupNote" class="note">Konfigurasi database belum diisi. Aplikasi berjalan dalam mode lokal dan
+                belum berbagi data antarperangkat.</div>
+            <form id="loginForm">
+                <div class="grid">
+                    <div class="field"><label for="email">Email petugas</label><input id="email" type="email"
+                            autocomplete="username" required placeholder="petugas@sekolah.id"></div>
+                    <div class="field"><label for="password">Kata sandi</label><input id="password" type="password"
+                            autocomplete="current-password" required></div>
+                </div>
+                <div class="actions"><button class="btn primary" type="submit">Login</button><button
+                        class="btn secondary" type="button" id="registerBtn">Daftarkan akun petugas</button><button
+                        class="btn secondary" type="button" id="configBtn">Pengaturan database</button></div>
+            </form>
+            <div id="loginMsg" class="status hidden"></div>
+            <div id="configPanel" class="hidden" style="margin-top:15px">
+                <h2>Konfigurasi Firebase</h2>
+                <p class="muted">Isi konfigurasi dari Firebase Console → Project settings → Your apps. Pengaturan ini
+                    disimpan pada browser ini.</p>
+                <form id="configForm">
+                    <div class="grid">
+                        <div class="field"><label>apiKey</label><input id="cfgApiKey" required></div>
+                        <div class="field"><label>authDomain</label><input id="cfgAuthDomain" required
+                                placeholder="nama-proyek.firebaseapp.com"></div>
+                        <div class="field"><label>projectId</label><input id="cfgProjectId" required></div>
+                        <div class="field"><label>appId</label><input id="cfgAppId" required></div>
+                        <div class="field"><label>storageBucket (opsional)</label><input id="cfgBucket"></div>
+                        <div class="field"><label>messagingSenderId (opsional)</label><input id="cfgSender"></div>
+                    </div>
+                    <div class="actions"><button class="btn primary" type="submit">Simpan konfigurasi</button><button
+                            class="btn secondary" type="button" id="cancelConfig">Batal</button></div>
+                </form>
+            </div>
+        </section>
+        <div id="appArea" class="hidden">
+            <div class="panel rowtitle">
+                <div><strong id="userLabel">Petugas</strong>
+                    <div class="muted" id="modeLabel">Mode lokal</div>
+                </div><button class="btn danger" id="logoutBtn">Keluar</button>
+            </div>
+            <section class="stats">
+                <div class="stat"><span>Jenis Barang</span><strong id="totalJenis">0</strong></div>
+                <div class="stat"><span>Total Stok Tersedia</span><strong id="totalStok">0</strong></div>
+                <div class="stat"><span>Transaksi Keluar</span><strong id="totalKeluar">0</strong></div>
+            </section>
+            <div id="appNote" class="note"></div>
+            <nav class="tabs"><button class="tab active" data-tab="stok">📋 Daftar Stok</button><button class="tab"
+                    data-tab="masuk">➕ Barang Masuk</button><button class="tab" data-tab="keluar">📤 Barang
+                    Keluar</button><button class="tab" data-tab="riwayat">🧾 Riwayat</button><button class="tab"
+                    data-tab="laporan">📅 Laporan Bulanan</button><button class="tab" data-tab="cadangan">💾
+                    Cadangan</button></nav>
+            <section id="view-stok" class="view">
+                <div class="panel">
+                    <div class="rowtitle">
+                        <h2>Daftar Stok Barang</h2><button class="btn secondary" id="addNew">+ Barang Baru</button>
+                    </div><input class="search" id="searchStock" placeholder="Cari nama barang…">
+                    <div class="tablewrap" style="margin-top:12px">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nama Barang</th>
+                                    <th>Total Masuk</th>
+                                    <th>Total Keluar</th>
+                                    <th>Stok Tersedia</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="stockBody"></tbody>
+                        </table>
+                    </div>
+                    <div id="stockEmpty" class="empty">Belum ada data barang.</div>
+                </div>
+                <div class="panel hidden" id="newItemPanel">
+                    <h2>Tambah Barang Baru</h2>
+                    <form id="itemForm">
+                        <div class="grid">
+                            <div class="field"><label>Nama Barang *</label><input id="itemName" required></div>
+                            <div class="field"><label>Jumlah awal *</label><input id="itemQty" type="number" min="0"
+                                    step="1" value="0" required></div>
+                            <div class="field"><label>Tanggal masuk *</label><input id="itemDate" type="date" required>
+                            </div>
+                        </div>
+                        <div class="actions"><button class="btn primary">Simpan Barang</button><button
+                                class="btn secondary" type="button" id="cancelNew">Batal</button></div>
+                    </form>
+                </div>
+            </section>
+            <section id="view-masuk" class="view hidden">
+                <div class="panel">
+                    <h2>Catat Barang Masuk</h2>
+                    <form id="inForm">
+                        <div class="grid">
+                            <div class="field"><label>Nama Barang *</label><select id="inName" required></select></div>
+                            <div class="field"><label>Jumlah masuk *</label><input id="inQty" type="number" min="1"
+                                    step="1" required></div>
+                            <div class="field"><label>Tanggal masuk *</label><input id="inDate" type="date" required>
+                            </div>
+                            <div class="field full"><label>Keterangan</label><input id="inNote"
+                                    placeholder="Contoh: pembelian ATK"></div>
+                        </div>
+                        <div class="actions"><button class="btn primary">Simpan Barang Masuk</button></div>
+                    </form>
+                    <div class="divider" style="margin-top:24px"></div>
+                    <h3>Data Barang Masuk</h3>
+                    <div class="tablewrap">
+                        <table><thead><tr><th>Tanggal</th><th>Nama Barang</th><th>Jumlah Masuk</th><th>Keterangan</th><th>Aksi</th></tr></thead>
+                        <tbody id="incomingBody"></tbody></table>
+                    </div>
+                    <div id="incomingEmpty" class="empty hidden">Belum ada data barang masuk.</div>
+                </div>
+            </section>
+            <section id="view-keluar" class="view hidden">
+                <div class="panel">
+                    <h2>Catat Pengambilan Barang</h2>
+                    <form id="outForm">
+                        <div class="grid">
+                            <div class="field"><label>Nama Barang *</label><select id="outName" required></select></div>
+                            <div class="field"><label>Jumlah keluar *</label><input id="outQty" type="number" min="1"
+                                    step="1" required></div>
+                            <div class="field"><label>Tanggal keluar *</label><input id="outDate" type="date" required>
+                            </div>
+                            <div class="field"><label>Nama pengambil barang *</label><input id="taker" required
+                                    placeholder="Nama guru/tendik/petugas"></div>
+                            <div class="field full"><label>Keterangan</label><input id="outNote"
+                                    placeholder="Keperluan pengambilan"></div>
+                            <div class="field full"><label>Tanda tangan pengambil barang *</label><canvas id="signature"
+                                    class="signature" aria-label="Area tanda tangan"></canvas>
+                                <div class="sigtools">
+                                    <button class="btn secondary" type="button" id="clearSig">Hapus tanda tangan</button>
+                                    <label class="btn secondary" for="signatureUpload" style="cursor:pointer">Upload tanda tangan JPG</label>
+                                    <input id="signatureUpload" type="file" accept=".jpg,.jpeg,image/jpeg" style="display:none">
+                                    <span class="muted" id="signatureHelp">Tanda tangan dengan mouse, touchpad, atau jari pada layar HP. Format upload: JPG/JPEG.</span>
+                                </div>
+                                <div id="signaturePreviewName" class="muted" aria-live="polite"></div>
+                            </div>
+                        </div>
+                        <div id="availableHint" class="muted"></div>
+                        <div class="actions"><button class="btn primary">Simpan Barang Keluar</button></div>
+                    </form>
+                    <div class="divider" style="margin-top:24px"></div>
+                    <h3>Data Barang Keluar</h3>
+                    <div class="tablewrap">
+                        <table><thead><tr><th>Tanggal</th><th>Nama Barang</th><th>Jumlah Keluar</th><th>Pengambil</th><th>Keterangan</th><th>Tanda tangan</th><th>Aksi</th></tr></thead>
+                        <tbody id="outgoingBody"></tbody></table>
+                    </div>
+                    <div id="outgoingEmpty" class="empty hidden">Belum ada data barang keluar.</div>
+                </div>
+            </section>
+            <section id="view-riwayat" class="view hidden">
+                <div class="panel">
+                    <div class="rowtitle">
+                        <h2>Riwayat Transaksi</h2><select id="filterType" class="search" style="width:auto">
+                            <option value="semua">Semua transaksi</option>
+                            <option value="masuk">Barang masuk</option>
+                            <option value="keluar">Barang keluar</option>
+                        </select>
+                    </div>
+                    <div class="tablewrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Tanggal</th>
+                                    <th>Jenis</th>
+                                    <th>Nama Barang</th>
+                                    <th>Jumlah</th>
+                                    <th>Pengambil/Keterangan</th>
+                                    <th>Tanda tangan</th>
+                                </tr>
+                            </thead>
+                            <tbody id="historyBody"></tbody>
+                        </table>
+                    </div>
+                    <div id="historyEmpty" class="empty">Belum ada riwayat.</div>
+                </div>
+            </section>
+            <section id="view-laporan" class="view hidden">
+                <div class="panel">
+                    <h2>Laporan Bulanan</h2>
+                    <div class="grid">
+                        <div class="field"><label>Pilih bulan laporan</label><input id="reportMonth" type="month"></div>
+                    </div>
+                    <div class="actions"><button class="btn primary" id="reportBtn">Tampilkan laporan</button><button
+                            class="btn secondary" id="reportCsvBtn">Ekspor laporan CSV</button><button
+                            class="btn secondary" id="printReportBtn">Cetak / Simpan PDF</button></div>
+                    <div id="reportSummary" style="margin-top:14px"></div>
+                    <div class="tablewrap" style="margin-top:10px">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Tanggal</th>
+                                    <th>Jenis</th>
+                                    <th>Nama Barang</th>
+                                    <th>Jumlah</th>
+                                    <th>Pengambil</th>
+                                    <th>Keterangan</th>
+                                    <th>Tanda tangan</th>
+                                </tr>
+                            </thead>
+                            <tbody id="reportBody"></tbody>
+                        </table>
+                    </div>
+                    <div id="reportEmpty" class="empty">Pilih bulan lalu tampilkan laporan.</div>
+                </div>
+            </section>
+            <section id="view-cadangan" class="view hidden">
+                <div class="panel">
+                    <h2>Cadangan Data</h2>
+                    <p>Ekspor CSV atau unduh cadangan JSON secara berkala.</p>
+                    <div class="actions"><button class="btn primary" id="exportBtn">Ekspor semua transaksi
+                            CSV</button><button class="btn secondary" id="backupBtn">Unduh cadangan JSON</button><label
+                            class="btn secondary" for="restoreFile">Pulihkan JSON (mode lokal)</label><input
+                            id="restoreFile" class="hidden" type="file" accept="application/json,.json"></div>
+                    <p class="muted">Tanda tangan ikut tersimpan dalam data transaksi. Jika database online aktif,
+                        seluruh petugas yang login ke proyek yang sama memakai data terpusat.</p>
+                </div>
+            </section>
+        </div>
+        <div class="foot">Aplikasi Stok Barang · SMAN 1 Perbaungan</div>
+    </main>
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+        import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+        import { getFirestore, collection, doc, getDocs, setDoc, deleteDoc, onSnapshot, writeBatch } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+        (() => {
+            'use strict'; const $ = id => document.getElementById(id), LOCAL = 'stok_sman1_perbaungan_v2', CFG = 'stok_sman1_firebase_cfg'; let data = { items: [], transactions: [] }, user = null, app = null, auth = null, db = null, remote = false, unsubs = [], sigDrawing = false, sigHasInk = false, sigDataUrl = ''; const today = () => { let d = new Date(), off = d.getTimezoneOffset(); return new Date(d.getTime() - off * 60000).toISOString().slice(0, 10) }; const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); const id = () => crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2); function msg(s) { $('loginMsg').textContent = s; $('loginMsg').classList.remove('hidden') } function loadLocal() { try { let d = JSON.parse(localStorage.getItem(LOCAL)); if (d && Array.isArray(d.items) && Array.isArray(d.transactions)) data = d } catch { } } function saveLocal() { localStorage.setItem(LOCAL, JSON.stringify(data)) } function cfgGet() { try { return JSON.parse(localStorage.getItem(CFG) || 'null') } catch { return null } } function cfgSetInputs(c) { if (!c) return; $('cfgApiKey').value = c.apiKey || ''; $('cfgAuthDomain').value = c.authDomain || ''; $('cfgProjectId').value = c.projectId || ''; $('cfgAppId').value = c.appId || ''; $('cfgBucket').value = c.storageBucket || ''; $('cfgSender').value = c.messagingSenderId || '' } function initFirebase(c) { try { app = initializeApp(c); auth = getAuth(app); db = getFirestore(app); remote = true; $('setupNote').classList.add('hidden'); $('modeLabel').textContent = 'Database online · Firebase'; $('appNote').textContent = 'Database online aktif. Data disimpan terpusat di Firebase dan dapat diakses oleh petugas lain yang login ke proyek yang sama.'; onAuthStateChanged(auth, async u => { user = u; if (u) { $('loginPanel').classList.add('hidden'); $('appArea').classList.remove('hidden'); $('userLabel').textContent = u.email || 'Petugas'; await subscribeData() } else { $('loginPanel').classList.remove('hidden'); $('appArea').classList.add('hidden'); clearSubs() } }); return true } catch (e) { console.error(e); remote = false; msg('Konfigurasi Firebase belum valid: ' + e.message); return false } } function clearSubs() { unsubs.forEach(f => f()); unsubs = [] } async function subscribeData() { clearSubs(); let items = [], tx = []; const iUn = onSnapshot(collection(db, 'items'), snap => { items = snap.docs.map(d => ({ ...d.data(), id: d.id })); data.items = items; render() }, err => alert('Gagal membaca daftar barang: ' + err.message)); const tUn = onSnapshot(collection(db, 'transactions'), snap => { tx = snap.docs.map(d => ({ ...d.data(), id: d.id })); data.transactions = tx; render() }, err => alert('Gagal membaca transaksi: ' + err.message)); unsubs = [iUn, tUn] } async function persistItem(x) { if (remote) { await setDoc(doc(db, 'items', x.id), x) } else saveLocal() } async function updateItemDetails(itemId, newName, openingQty, openingDate) { const item = data.items.find(i => i.id === itemId); if (!item) throw new Error('Barang tidak ditemukan.'); const openingTx = data.transactions.find(t => t.itemId === itemId && t.type === 'masuk' && String(t.note || '').trim().toLowerCase() === 'stok awal'); const otherTx = data.transactions.filter(t => t.itemId === itemId && t.id !== openingTx?.id); const otherIn = otherTx.filter(t => t.type === 'masuk').reduce((s,t) => s + Number(t.qty || 0), 0); const out = otherTx.filter(t => t.type === 'keluar').reduce((s,t) => s + Number(t.qty || 0), 0); if (openingQty + otherIn - out < 0) throw new Error('Jumlah stok awal tidak boleh dikurangi karena akan membuat stok tersedia menjadi minus. Total barang keluar yang sudah tercatat harus tetap terpenuhi.'); const updatedItem = { ...item, name: newName, createdAt: openingDate, updatedAt: new Date().toISOString(), updatedBy: user?.email || '' }; let updatedTx = openingTx ? { ...openingTx, qty: openingQty, date: openingDate, note: 'Stok awal', correctedAt: new Date().toISOString(), correctedBy: user?.email || '' } : (openingQty > 0 ? { id: id(), itemId, type: 'masuk', qty: openingQty, date: openingDate, note: 'Stok awal', taker: '', signature: '', createdBy: user?.email || '' } : null); if (remote) { const batch = writeBatch(db); batch.set(doc(db, 'items', itemId), updatedItem); if (updatedTx) batch.set(doc(db, 'transactions', String(updatedTx.id)), updatedTx); await batch.commit(); } else { data.items = data.items.map(i => i.id === itemId ? updatedItem : i); if (openingTx && updatedTx) data.transactions = data.transactions.map(t => t.id === openingTx.id ? updatedTx : t); else if (!openingTx && updatedTx) data.transactions.push(updatedTx); saveLocal(); render(); } } async function persistTx(x) { if (remote) { await setDoc(doc(db, 'transactions', String(x.id)), x) } else saveLocal() } async function removeItem(x) { if (remote) await deleteDoc(doc(db, 'items', x)); else saveLocal() } async function removeTx(x) {
+                const tx = data.transactions.find(t => String(t.id) === String(x));
+                if (!tx) throw new Error('Transaksi tidak ditemukan.');
+                // Menghapus transaksi masuk mengurangi stok; cegah stok menjadi minus.
+                if (tx.type === 'masuk') {
+                    const remainingStock = totals(tx.itemId).stok - Number(tx.qty || 0);
+                    if (remainingStock < 0) {
+                        throw new Error(`Transaksi masuk ini tidak dapat dihapus karena stok akan menjadi minus (${remainingStock} unit). Hapus atau koreksi transaksi barang keluar terkait terlebih dahulu.`);
+                    }
+                }
+                if (remote) {
+                    await deleteDoc(doc(db, 'transactions', String(x)));
+                } else {
+                    data.transactions = data.transactions.filter(t => String(t.id) !== String(x));
+                    saveLocal();
+                    render();
+                }
+            } function totals(itemId) { let masuk = 0, keluar = 0; data.transactions.filter(t => t.itemId === itemId).forEach(t => { if (t.type === 'masuk') masuk += Number(t.qty); else keluar += Number(t.qty) }); return { masuk, keluar, stok: masuk - keluar } } function allTotals() { return data.items.map(item => ({ item, ...totals(item.id) })) } function setDates() { ['itemDate', 'inDate', 'outDate'].forEach(x => { if ($(x) && !$(x).value) $(x).value = today() }); if (!$('reportMonth').value) $('reportMonth').value = today().slice(0, 7) } function tab(n) { document.querySelectorAll('.view').forEach(v => v.classList.add('hidden')); $('view-' + n).classList.remove('hidden'); document.querySelectorAll('.tab').forEach(b => b.classList.toggle('active', b.dataset.tab === n)); if (n === 'masuk' || n === 'keluar') { fillSelects(); renderTypeTransactions(n); } if (n === 'keluar') requestAnimationFrame(resizeCanvas); if (n === 'laporan') makeReport() } document.querySelectorAll('.tab').forEach(b => b.onclick = () => tab(b.dataset.tab)); $('configBtn').onclick = () => { $('configPanel').classList.toggle('hidden'); cfgSetInputs(cfgGet()) }; $('cancelConfig').onclick = () => $('configPanel').classList.add('hidden'); $('configForm').onsubmit = e => { e.preventDefault(); let c = { apiKey: $('cfgApiKey').value.trim(), authDomain: $('cfgAuthDomain').value.trim(), projectId: $('cfgProjectId').value.trim(), appId: $('cfgAppId').value.trim(), storageBucket: $('cfgBucket').value.trim(), messagingSenderId: $('cfgSender').value.trim() }; localStorage.setItem(CFG, JSON.stringify(c)); location.reload() }; $('loginForm').onsubmit = async e => { e.preventDefault(); const email = $('email').value.trim(), password = $('password').value; if (remote) { try { await signInWithEmailAndPassword(auth, email, password) } catch (err) { msg('Login gagal: ' + err.message) } } else { if (!email || password.length < 6) { msg('Masukkan email dan kata sandi minimal 6 karakter.'); return } user = { email }; $('loginPanel').classList.add('hidden'); $('appArea').classList.remove('hidden'); $('userLabel').textContent = email; $('modeLabel').textContent = 'Mode lokal · tidak tersinkron'; $('appNote').textContent = 'Mode lokal aktif. Data hanya tersimpan pada perangkat ini. Atur Firebase untuk berbagi data antar-HP.'; loadLocal(); render() } }; $('registerBtn').onclick = async () => { const email = $('email').value.trim(), password = $('password').value; if (!email || password.length < 6) { msg('Isi email dan kata sandi minimal 6 karakter, lalu tekan Daftarkan akun petugas.'); return } if (!remote) { msg('Atur konfigurasi Firebase terlebih dahulu untuk membuat akun petugas bersama.'); $('configPanel').classList.remove('hidden'); return } try { await createUserWithEmailAndPassword(auth, email, password); msg('Akun berhasil dibuat.') } catch (e) { msg('Pendaftaran gagal: ' + e.message) } }; $('logoutBtn').onclick = async () => { if (remote) await signOut(auth); else { user = null; $('appArea').classList.add('hidden'); $('loginPanel').classList.remove('hidden') } }; function fillSelects() { ['inName', 'outName'].forEach(k => { let s = $(k), old = s.value; s.innerHTML = '<option value="">Pilih barang…</option>' + data.items.map(i => `<option value="${esc(i.id)}">${esc(i.name)} (stok: ${totals(i.id).stok})</option>`).join(''); if (data.items.some(i => i.id === old)) s.value = old }); updateHint() } function updateHint() { let iid = $('outName').value, st = iid ? totals(iid).stok : null; $('availableHint').textContent = iid ? `Stok tersedia: ${st} unit` : 'Pilih barang untuk melihat stok tersedia.'; $('outQty').max = st === null ? '' : String(st) } $('outName').onchange = updateHint; $('addNew').onclick = () => { $('newItemPanel').classList.remove('hidden'); $('itemName').focus() }; $('cancelNew').onclick = () => $('newItemPanel').classList.add('hidden'); $('itemForm').onsubmit = async e => { e.preventDefault(); let name = $('itemName').value.trim(), qty = Number($('itemQty').value), date = $('itemDate').value; if (data.items.some(i => i.name.toLowerCase() === name.toLowerCase())) { alert('Nama barang sudah ada. Tambahkan jumlah melalui Barang Masuk.'); return } let iid = id(), item = { id: iid, name, createdAt: date, createdBy: user?.email || '' }; try { await persistItem(item); if (qty > 0) await persistTx({ id: id(), itemId: iid, type: 'masuk', qty, date, note: 'Stok awal', taker: '', signature: '' }); $('itemForm').reset(); $('itemQty').value = '0'; $('newItemPanel').classList.add('hidden'); setDates(); if (!remote) render(); alert('Barang berhasil disimpan.') } catch (err) { alert('Gagal menyimpan: ' + err.message) } }; $('inForm').onsubmit = async e => { e.preventDefault(); let itemId = $('inName').value, qty = Number($('inQty').value), date = $('inDate').value; if (!data.items.some(i => i.id === itemId) || qty < 1) return; try { await persistTx({ id: id(), itemId, type: 'masuk', qty, date, note: $('inNote').value.trim(), taker: '', signature: '', createdBy: user?.email || '' }); $('inForm').reset(); setDates(); if (!remote) render(); alert('Barang masuk berhasil dicatat.') } catch (err) { alert('Gagal menyimpan: ' + err.message) } };
+            const canvas = $('signature'), ctx = canvas.getContext('2d');
+            function resizeCanvas() {
+                const r = canvas.getBoundingClientRect();
+                if (r.width < 2 || r.height < 2) return;
+                const dpr = Math.max(1, window.devicePixelRatio || 1);
+                let old = null;
+                if (sigHasInk) { try { old = canvas.toDataURL('image/png'); } catch {} }
+                canvas.width = Math.round(r.width * dpr);
+                canvas.height = Math.round(r.height * dpr);
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                ctx.clearRect(0, 0, r.width, r.height);
+                ctx.lineWidth = 2.6; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = '#111827';
+                if (old) {
+                    const img = new Image();
+                    img.onload = () => { ctx.drawImage(img, 0, 0, r.width, r.height); };
+                    img.src = old;
+                }
+            }
+            function point(e) {
+                const r = canvas.getBoundingClientRect();
+                return { x: (e.clientX - r.left) * (canvas.clientWidth / r.width), y: (e.clientY - r.top) * (canvas.clientHeight / r.height) };
+            }
+            canvas.addEventListener('pointerdown', e => {
+                if (canvas.clientWidth < 2) resizeCanvas();
+                sigDataUrl = '';
+                sigDrawing = true; sigHasInk = true;
+                try { canvas.setPointerCapture(e.pointerId); } catch {}
+                const p = point(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x + 0.01, p.y + 0.01); ctx.stroke();
+                e.preventDefault();
+            });
+            canvas.addEventListener('pointermove', e => {
+                if (!sigDrawing) return;
+                const p = point(e); ctx.lineTo(p.x, p.y); ctx.stroke(); e.preventDefault();
+            });
+            ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(ev => canvas.addEventListener(ev, () => { sigDrawing = false; }));
+            function clearSignature() {
+                const r = canvas.getBoundingClientRect();
+                ctx.clearRect(0, 0, r.width || canvas.width, r.height || canvas.height);
+                sigHasInk = false; sigDataUrl = '';
+                $('signatureUpload').value = ''; $('signaturePreviewName').textContent = '';
+            }
+            function canvasToJpeg() {
+                const r = canvas.getBoundingClientRect(), dpr = Math.max(1, window.devicePixelRatio || 1);
+                const out = document.createElement('canvas');
+                out.width = Math.max(1, Math.round((r.width || canvas.width / dpr) * dpr));
+                out.height = Math.max(1, Math.round((r.height || canvas.height / dpr) * dpr));
+                const c = out.getContext('2d'); 
+                c.fillStyle = '#ffffff'; c.fillRect(0, 0, out.width, out.height);
+                c.drawImage(canvas, 0, 0, out.width, out.height);
+                return out.toDataURL('image/jpeg', 0.88);
+            }
+            $('clearSig').onclick = clearSignature;
+            $('signatureUpload').addEventListener('change', e => {
+                const file = e.target.files && e.target.files[0]; if (!file) return;
+                if (!['image/jpeg'].includes(file.type) && !/\.jpe?g$/i.test(file.name)) { alert('Pilih file gambar berformat JPG/JPEG.'); e.target.value = ''; return; }
+                if (file.size > 5 * 1024 * 1024) { alert('Ukuran file maksimal 5 MB.'); e.target.value = ''; return; }
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const r = canvas.getBoundingClientRect();
+                        if (r.width < 2) { tab('keluar'); requestAnimationFrame(() => drawUploaded(img, file.name)); }
+                        else drawUploaded(img, file.name);
+                    };
+                    img.onerror = () => { alert('File JPG tidak dapat dibaca.'); e.target.value = ''; };
+                    img.src = reader.result;
+                };
+                reader.onerror = () => { alert('Gagal membaca file tanda tangan.'); e.target.value = ''; };
+                reader.readAsDataURL(file);
+            });
+            function drawUploaded(img, filename) {
+                const r = canvas.getBoundingClientRect(), w = r.width, h = r.height;
+                if (w < 2 || h < 2) { alert('Buka menu Barang Keluar terlebih dahulu, lalu unggah ulang tanda tangan.'); return; }
+                ctx.clearRect(0, 0, w, h);
+                const scale = Math.min(w / img.width, h / img.height);
+                const dw = img.width * scale, dh = img.height * scale;
+                ctx.drawImage(img, (w - dw) / 2, (h - dh) / 2, dw, dh);
+                sigHasInk = true;
+                // Simpan representasi gambar yang sudah dinormalisasi dengan latar putih,
+                // agar tidak berubah menjadi blok hitam saat ditampilkan di riwayat.
+                sigDataUrl = canvasToJpeg();
+                $('signaturePreviewName').textContent = 'Tanda tangan dimuat: ' + filename;
+            }
+            window.addEventListener('resize', () => { if (!$('view-keluar').classList.contains('hidden')) resizeCanvas() });
+            $('outForm').onsubmit = async e => { e.preventDefault(); let itemId = $('outName').value, qty = Number($('outQty').value), date = $('outDate').value, taker = $('taker').value.trim(), item = data.items.find(i => i.id === itemId); if (!item || qty < 1 || !taker) return; if (!sigHasInk) { alert('Tanda tangan pengambil barang wajib diisi.'); return } let available = totals(itemId).stok; if (qty > available) { alert(`Stok tidak cukup. Tersedia ${available} unit.`); return } try { await persistTx({ id: id(), itemId, type: 'keluar', qty, date, taker, note: $('outNote').value.trim(), signature: sigDataUrl || canvasToJpeg(), createdBy: user?.email || '' }); $('outForm').reset(); clearSignature(); setDates(); if (!remote) render(); alert('Barang keluar dan tanda tangan berhasil disimpan.') } catch (err) { alert('Gagal menyimpan: ' + err.message) } };
+            function renderStock() { let q = $('searchStock').value.toLowerCase().trim(), rows = allTotals().filter(x => x.item.name.toLowerCase().includes(q)); $('stockBody').innerHTML = rows.map(x => `<tr><td><b>${esc(x.item.name)}</b></td><td>${x.masuk}</td><td>${x.keluar}</td><td><span class="pill ${x.stok <= 2 ? 'low' : ''}">${x.stok}</span></td><td><button class="edit" data-edit-item="${esc(x.item.id)}">Edit</button><button class="delete" data-del-item="${esc(x.item.id)}">Hapus</button></td></tr>`).join(''); $('stockEmpty').classList.toggle('hidden', rows.length > 0); $('stockBody').querySelectorAll('[data-edit-item]').forEach(b => b.onclick = async () => { let iid = b.dataset.editItem, item = data.items.find(i => i.id === iid); if (!item) return; const openingTx = data.transactions.find(t => t.itemId === iid && t.type === 'masuk' && String(t.note || '').trim().toLowerCase() === 'stok awal'); let newName = prompt('EDIT DATA BARANG\n\nNama barang:', item.name); if (newName === null) return; newName = newName.trim(); if (!newName) { alert('Nama barang tidak boleh kosong.'); return; } if (data.items.some(i => i.id !== iid && i.name.toLowerCase() === newName.toLowerCase())) { alert('Nama barang tersebut sudah digunakan.'); return; } let qtyText = prompt('Jumlah stok awal (unit):', String(openingTx ? Number(openingTx.qty) : 0)); if (qtyText === null) return; if (!/^\d+$/.test(qtyText.trim())) { alert('Jumlah stok awal harus berupa bilangan bulat 0 atau lebih.'); return; } let openingQty = Number(qtyText); let openingDate = prompt('Tanggal pencatatan stok awal (YYYY-MM-DD):', openingTx?.date || item.createdAt || today()); if (openingDate === null) return; openingDate = openingDate.trim(); if (!/^\d{4}-\d{2}-\d{2}$/.test(openingDate) || Number.isNaN(Date.parse(openingDate))) { alert('Format tanggal tidak valid. Gunakan YYYY-MM-DD, contoh 2026-11-07.'); return; } try { await updateItemDetails(iid, newName, openingQty, openingDate); alert('Data barang berhasil diperbarui. Riwayat transaksi selain stok awal tetap dipertahankan.'); } catch (e) { alert('Gagal mengubah barang: ' + e.message); } }); $('stockBody').querySelectorAll('[data-del-item]').forEach(b => b.onclick = async () => { let iid = b.dataset.delItem; if (data.transactions.some(t => t.itemId === iid)) { alert('Barang memiliki riwayat transaksi sehingga tidak dapat dihapus.'); return } if (confirm('Hapus barang ini?')) { try { await removeItem(iid); if (!remote) { data.items = data.items.filter(i => i.id !== iid); saveLocal(); render() } } catch (e) { alert(e.message) } } }) } $('searchStock').oninput = renderStock;
+            async function editTransaction(txId) {
+                const tx = data.transactions.find(t => String(t.id) === String(txId));
+                if (!tx) return;
+
+                // Tombol Edit pada baris transaksi langsung mengedit transaksi tersebut.
+                // Tidak lagi meminta pengguna memilih nomor barang dari daftar.
+                const item = data.items.find(i => i.id === tx.itemId);
+                if (!item) { alert('Data barang untuk transaksi ini tidak ditemukan.'); return; }
+
+                const qtyText = prompt(
+                    `EDIT JUMLAH ${tx.type === 'masuk' ? 'BARANG MASUK' : 'BARANG KELUAR'}\n\nBarang: ${item.name}\nJumlah saat ini: ${tx.qty}\n\nMasukkan jumlah yang benar:`,
+                    String(tx.qty)
+                );
+                if (qtyText === null) return;
+                if (!/^[1-9]\d*$/.test(qtyText.trim())) {
+                    alert('Jumlah harus berupa bilangan bulat minimal 1.');
+                    return;
+                }
+                const qty = Number(qtyText);
+
+                const date = prompt('Tanggal (YYYY-MM-DD):', tx.date || today());
+                if (date === null) return;
+                if (!/^\d{4}-\d{2}-\d{2}$/.test(date.trim()) || Number.isNaN(Date.parse(date.trim()))) {
+                    alert('Tanggal tidak valid. Gunakan format YYYY-MM-DD.');
+                    return;
+                }
+
+                let taker = tx.taker || '';
+                if (tx.type === 'keluar') {
+                    taker = prompt('Nama pengambil:', taker);
+                    if (taker === null) return;
+                    taker = taker.trim();
+                    if (!taker) { alert('Nama pengambil wajib diisi.'); return; }
+                }
+
+                const note = prompt('Keterangan:', tx.note || '');
+                if (note === null) return;
+
+                // Periksa stok setelah transaksi ini diperbarui agar stok tidak minus.
+                if (tx.type === 'keluar') {
+                    const available = totals(tx.itemId).stok + Number(tx.qty);
+                    if (qty > available) {
+                        alert(`Stok tidak cukup. Maksimal jumlah untuk transaksi ini: ${available} unit.`);
+                        return;
+                    }
+                }
+
+                const updated = { ...tx, qty, date: date.trim(), taker, note: note.trim() };
+                try {
+                    if (remote) {
+                        await setDoc(doc(db, 'transactions', String(updated.id)), updated);
+                    } else {
+                        const index = data.transactions.findIndex(t => String(t.id) === String(txId));
+                        if (index < 0) return;
+                        data.transactions[index] = updated;
+                        saveLocal();
+                        render();
+                    }
+                    alert('Transaksi berhasil diperbarui.');
+                } catch (err) {
+                    alert('Gagal memperbarui transaksi: ' + err.message);
+                }
+            }
+
+            function renderTypeTransactions(type) {
+                const isIn = type === 'masuk';
+                const body = $(isIn ? 'incomingBody' : 'outgoingBody');
+                const empty = $(isIn ? 'incomingEmpty' : 'outgoingEmpty');
+                const rows = data.transactions.filter(t => t.type === type).sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+                body.innerHTML = rows.map(t => {
+                    const item = data.items.find(i => i.id === t.itemId);
+                    const signature = !isIn && t.signature
+                        ? `<img alt="Tanda tangan pengambil" src="${t.signature}" style="width:110px;height:48px;object-fit:contain;border:1px solid #ddd;background:#fff;padding:2px;border-radius:4px">`
+                        : (isIn ? '-' : '-');
+                    return `<tr>
+                        <td>${esc(t.date || '-')}</td>
+                        <td>${esc(item?.name || 'Barang tidak ditemukan')}</td>
+                        <td>${Number(t.qty) || 0}</td>
+                        ${isIn ? `<td>${esc(t.note || '-')}</td>` : `<td>${esc(t.taker || '-')}</td><td>${esc(t.note || '-')}</td><td>${signature}</td>`}
+                        <td>
+                            <button type="button" class="edit" data-edit-tx="${esc(t.id)}">Edit</button>
+                            <button type="button" class="delete" data-delete-tx="${esc(t.id)}">Hapus</button>
+                        </td>
+                    </tr>`;
+                }).join('');
+                empty.classList.toggle('hidden', rows.length > 0);
+                body.querySelectorAll('[data-edit-tx]').forEach(button => {
+                    button.onclick = () => editTransaction(button.dataset.editTx);
+                });
+                body.querySelectorAll('[data-delete-tx]').forEach(button => {
+                    button.onclick = async () => {
+                        const tx = data.transactions.find(t => String(t.id) === String(button.dataset.deleteTx));
+                        if (!tx) return;
+                        const item = data.items.find(i => i.id === tx.itemId);
+                        const jenis = tx.type === 'masuk' ? 'barang masuk' : 'barang keluar';
+                        const detail = `${jenis}: ${item?.name || 'Barang tidak ditemukan'} sebanyak ${tx.qty} unit pada ${tx.date || '-'}`;
+                        if (!confirm(`Yakin ingin menghapus transaksi ini?\n\n${detail}\n\n${tx.type === 'keluar' ? 'Stok akan bertambah kembali.' : 'Stok akan berkurang.'}`)) return;
+                        button.disabled = true;
+                        try {
+                            await removeTx(tx.id);
+                            if (remote) {
+                                // Snapshot Firebase akan memperbarui tampilan setelah penghapusan tersimpan.
+                            }
+                            alert('Transaksi berhasil dihapus.');
+                        } catch (err) {
+                            button.disabled = false;
+                            alert('Transaksi tidak dapat dihapus: ' + err.message);
+                        }
+                    };
+                });
+            }
+
+            function renderHistory() { let filter = $('filterType').value, tx = [...data.transactions].filter(t => filter === 'semua' || t.type === filter).sort((a, b) => b.date.localeCompare(a.date)); $('historyBody').innerHTML = tx.map(t => { let item = data.items.find(i => i.id === t.itemId); return `<tr><td>${esc(t.date)}</td><td><span class="pill ${t.type === 'keluar' ? 'low' : ''}">${t.type === 'masuk' ? 'Masuk' : 'Keluar'}</span></td><td>${esc(item?.name || 'Barang tidak ditemukan')}</td><td>${t.qty}</td><td>${esc(t.taker || t.note || '-')}${t.taker && t.note ? '<br>' + esc(t.note) : ''}</td><td>${t.signature ? `<img alt="Tanda tangan pengambil" src="${t.signature}" style="width:150px;height:65px;object-fit:contain;object-position:center;border:1px solid #ddd;background:#fff;padding:3px;border-radius:4px">` : '-'}</td></tr>` }).join(''); $('historyEmpty').classList.toggle('hidden', tx.length > 0) } $('filterType').onchange = renderHistory;
+            function makeReport() { let month = $('reportMonth').value; if (!month) return; let tx = data.transactions.filter(t => (t.date || '').slice(0, 7) === month).sort((a, b) => a.date.localeCompare(b.date)); let incoming = tx.filter(t => t.type === 'masuk').reduce((s, t) => s + Number(t.qty), 0), outgoing = tx.filter(t => t.type === 'keluar').reduce((s, t) => s + Number(t.qty), 0); $('reportSummary').innerHTML = `<div class="stats"><div class="stat"><span>Transaksi</span><strong>${tx.length}</strong></div><div class="stat"><span>Total Barang Masuk</span><strong>${incoming}</strong></div><div class="stat"><span>Total Barang Keluar</span><strong>${outgoing}</strong></div></div>`; $('reportBody').innerHTML = tx.map(t => `<tr><td>${esc(t.date)}</td><td><span class="pill ${t.type === 'keluar' ? 'low' : ''}">${t.type === 'masuk' ? 'Masuk' : 'Keluar'}</span></td><td>${esc(data.items.find(i => i.id === t.itemId)?.name || '-')}</td><td>${t.qty}</td><td>${esc(t.taker || '-')}</td><td>${esc(t.note || '-')}</td><td>${t.signature ? `<img alt="Tanda tangan pengambil" src="${t.signature}" style="width:150px;height:65px;object-fit:contain;object-position:center;border:1px solid #ddd;background:#fff;padding:3px;border-radius:4px">` : '-'}</td></tr>`).join(''); $('reportEmpty').classList.toggle('hidden', tx.length > 0) } $('reportBtn').onclick = makeReport; $('reportMonth').onchange = makeReport; function csvCell(v) { return '"' + String(v ?? '').replace(/"/g, '""') + '"' } function download(name, content, type) { let blob = new Blob(['\ufeff' + content], { type }), url = URL.createObjectURL(blob), a = document.createElement('a'); a.href = url; a.download = name; a.click(); URL.revokeObjectURL(url) } function reportRows() { let month = $('reportMonth').value; return data.transactions.filter(t => (t.date || '').slice(0, 7) === month).sort((a, b) => a.date.localeCompare(b.date)).map(t => [t.date, t.type === 'masuk' ? 'Barang Masuk' : 'Barang Keluar', data.items.find(i => i.id === t.itemId)?.name || '', t.qty, t.taker || '', t.note || '']) } $('reportCsvBtn').onclick = () => { let rows = [['Tanggal', 'Jenis', 'Nama Barang', 'Jumlah', 'Nama Pengambil', 'Keterangan'], ...reportRows()]; download('Laporan_Bulanan_' + $('reportMonth').value + '_SMAN1_Perbaungan.csv', rows.map(r => r.map(csvCell).join(',')).join('\r\n'), 'text/csv;charset=utf-8') }; $('printReportBtn').onclick = () => window.print(); $('exportBtn').onclick = () => { let rows = [['Tanggal', 'Jenis', 'Nama Barang', 'Jumlah', 'Nama Pengambil', 'Keterangan'], ...data.transactions.sort((a, b) => a.date.localeCompare(b.date)).map(t => [t.date, t.type === 'masuk' ? 'Barang Masuk' : 'Barang Keluar', data.items.find(i => i.id === t.itemId)?.name || '', t.qty, t.taker || '', t.note || ''])]; download('Riwayat_Stok_SMAN1_Perbaungan.csv', rows.map(r => r.map(csvCell).join(',')).join('\r\n'), 'text/csv;charset=utf-8') }; $('backupBtn').onclick = () => download('Cadangan_Stok_SMAN1_Perbaungan.json', JSON.stringify({ ...data, backupAt: new Date().toISOString() }, null, 2), 'application/json'); $('restoreFile').onchange = async e => { if (remote) { alert('Pemulihan JSON otomatis dinonaktifkan saat database online agar data bersama tidak tertimpa.'); e.target.value = ''; return } let f = e.target.files[0]; if (!f) return; try { let v = JSON.parse(await f.text()); if (!Array.isArray(v.items) || !Array.isArray(v.transactions)) throw Error(); data = v; saveLocal(); render(); alert('Cadangan dipulihkan.') } catch { alert('File JSON tidak valid.') } e.target.value = '' };
+            function render() { let sums = allTotals(); $('totalJenis').textContent = data.items.length; $('totalStok').textContent = sums.reduce((a, x) => a + x.stok, 0); $('totalKeluar').textContent = data.transactions.filter(t => t.type === 'keluar').length; renderStock(); renderHistory(); renderTypeTransactions('masuk'); renderTypeTransactions('keluar'); fillSelects(); if (!$('view-laporan').classList.contains('hidden')) makeReport() } loadLocal(); setDates(); resizeCanvas(); cfgSetInputs(cfgGet()); let c = cfgGet(); if (c && c.apiKey && c.projectId && c.appId) initFirebase(c); else { $('modeLabel').textContent = 'Belum terhubung'; $('setupNote').classList.remove('hidden') }
+        })();
+    </script>
+</body>
+
+</html>
